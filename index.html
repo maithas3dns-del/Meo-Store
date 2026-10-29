@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meo Store | متجر ميو</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-pink: #ffb6c1;
+            --dark-pink: #ff69b4;
+            --soft-bg: #fff0f5;
+            --white: #ffffff;
+            --text-color: #555555;
+            --border-radius: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: var(--soft-bg);
+            color: var(--text-color);
+            padding-bottom: 50px;
+        }
+
+        header {
+            background-color: var(--white);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid var(--primary-pink);
+        }
+
+        header h1 {
+            color: var(--dark-pink);
+            font-size: 26px;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .cart-btn {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary-pink);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 30px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(255, 105, 180, 0.3);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .section-title {
+            text-align: center;
+            color: var(--dark-pink);
+            margin: 30px 0 15px;
+            font-size: 20px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 2px solid #ffe4e1;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 15px;
+            background-color: #ffe4e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff69b4;
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            color: var(--dark-pink);
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .add-to-cart {
+            background-color: var(--primary-pink);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .add-to-cart:hover {
+            background-color: var(--dark-pink);
+        }
+
+        /* سلة المشتريات */
+        .cart-section {
+            background: var(--white);
+            margin-top: 40px;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 2px solid var(--primary-pink);
+        }
+
+        .cart-section h2 {
+            color: var(--dark-pink);
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .cart-items {
+            list-style: none;
+            margin-bottom: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+            font-size: 14px;
+        }
+
+        .cart-total {
+            font-weight: bold;
+            text-align: left;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .checkout-btn {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
+        }
+
+        .checkout-btn:hover {
+            background-color: #1ebe5d;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 13px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="cart-btn" onclick="scrollToCart()">🛒 السلة (<span id="cart-count">0</span>)</button>
+        <h1>Meo Store 🎀</h1>
+        <p>متجرك الخاص للإكسسوارات المصنوعة بحب ✨</p>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title">✨ منتجاتنا المميزة ✨</h2>
+        
+        <div class="products-grid">
+            <!-- منتج 1 -->
+            <div class="product-card">
+                <div class="product-img">📿</div>
+                <div class="product-name">سوار خرز وردي أنيق</div>
+                <div class="product-price">25 درهم</div>
+                <button class="add-to-cart" onclick="addToCart('سوار خرز وردي أنيق', 25)">إضافة للسلة</button>
+            </div>
+
+            <!-- منتج 2 -->
+            <div class="product-card">
+                <div class="product-img">💍</div>
+                <div class="product-name">خاتم خرز بالوردة</div>
+                <div class="product-price">15 درهم</div>
+                <button class="add-to-cart" onclick="addToCart('خاتم خرز بالوردة', 15)">إضافة للسلة</button>
+            </div>
+
+            <!-- منتج 3 -->
+            <div class="product-card">
+                <div class="product-img">🏺</div>
+                <div class="product-name">قطعة فخار مزخرفة يدويّاً</div>
+                <div class="product-price">45 درهم</div>
+                <button class="add-to-cart" onclick="addToCart('قطعة فخار مزخرفة يدويّاً', 45)">إضافة للسلة</button>
+            </div>
+
+            <!-- منتج 4 -->
+            <div class="product-card">
+                <div class="product-img">🎀</div>
+                <div class="product-name">طقم إكسسوارات فيونكة</div>
+                <div class="product-price">60 درهم</div>
+                <button class="add-to-cart" onclick="addToCart('طقم إكسسوارات فيونكة', 60)">إضافة للسلة</button>
+            </div>
+        </div>
+
+        <!-- قسم السلة -->
+        <div class="cart-section" id="cart-section">
+            <h2>🛍️ سلة المشتريات</h2>
+            <ul class="cart-items" id="cart-items">
+                <li style="text-align: center; color: #aaa;">السلة فارغة حالياً...</li>
+            </ul>
+            <div class="cart-total" id="cart-total">المجموع: 0 درهم</div>
+            <button class="checkout-btn" onclick="sendToWhatsApp()">إرسال الطلب عبر الواتساب 💬</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Meo Store. Made with 🤍</p>
+    </footer>
+
+    <script>
+        let cart = [];
+
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItemsList = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const cartTotal = document.getElementById('cart-total');
+
+            cartItemsList.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItemsList.innerHTML = '<li style="text-align: center; color: #aaa;">السلة فارغة حالياً...</li>';
+                cartCount.innerText = 0;
+                cartTotal.innerText = 'المجموع: 0 درهم';
+                return;
+            }
+
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                cartItemsList.innerHTML += `
+                    <li class="cart-item">
+                        <span>${item.name}</span>
+                        <span>${item.price} درهم</span>
+                    </li>
+                `;
+            });
+
+            cartCount.innerText = cart.length;
+            cartTotal.innerText = `المجموع: ${total} درهم`;
+        }
+
+        function scrollToCart() {
+            document.getElementById('cart-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function sendToWhatsApp() {
+            if (cart.length === 0) {
+                alert('سلتك فارغة يا حلوة! أضيفي منتجات أولاً 🌸');
+                return;
+            }
+
+            let message = "مرحباً، أود طلب المنتجات التالية من Meo Store:%0A";
+            let total = 0;
+            
+            cart.forEach(item => {
+                message += `- ${item.name} (${item.price} درهم)%0A`;
+                total += item.price;
+            });
+
+            message += `%0A*المجموع الكلي: ${total} درهم*`;
+
+            // استبدلي الرقم أدناه برقم الواتساب الخاص بكِ (مع رمز الدولة بدون علامة +)
+            let phone = "971500000000"; 
+            let url = `https://wa.me/${phone}?text=${message}`;
+            
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
